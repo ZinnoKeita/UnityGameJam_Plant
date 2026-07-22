@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
-public class player : MonoBehaviour
+public class Player : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float MoveSpeed = 5.0f;
@@ -14,6 +14,9 @@ public class player : MonoBehaviour
     [SerializeField] private float restamina = 1.5f;
 
     [SerializeField] private TMP_Text staminaText;
+
+    public int HP = 600;
+    public int MaxHP = 600;
     
     void Start()
     {
@@ -71,5 +74,19 @@ public class player : MonoBehaviour
         }
 
         staminaText.text = "Stamina:" + stamina.ToString("F1");
+    }
+
+    void Damage(int damage)
+    {
+        HP -= damage;
+    }
+
+    void Heel(int heel)
+    {
+        HP += heel;
+        if (HP >= MaxHP)
+        {
+            HP = MaxHP;
+        }
     }
 }
