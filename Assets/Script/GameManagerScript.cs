@@ -29,7 +29,6 @@ public class GameManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         if (CountDown>=-1)
         {
             countTime -= Time.deltaTime;
@@ -43,16 +42,15 @@ public class GameManagerScript : MonoBehaviour
             {
                 CountdownText.text = CountDown.ToString();
             }
+            else if (CountDown <= -1)
+            {
+                CountdownText.text = " ";
+            }
             else if (CountDown <= 0)
             {
                 isGameStart = true;
                 CountdownText.text = "GO!";
             }
-            else
-            {
-                CountdownText.text = "";
-            }
-            
             return;
         }
 

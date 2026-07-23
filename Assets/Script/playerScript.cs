@@ -15,9 +15,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TMP_Text staminaText;
     [SerializeField] private TMP_Text HPText;
+    [SerializeField] private TMP_Text ScoreText;
 
     public int HP = 600;
     public int MaxHP = 600;
+
+    public int Score = 0;
     
 
 
@@ -84,9 +87,11 @@ public class Player : MonoBehaviour
         }
 
         staminaText.text = "Stamina:" + stamina.ToString("F1");
-        HPText.text = "HP:" + HP.ToString("F1");
+        HPText.text = "HP:" + HP.ToString();
+        ScoreText.text = "Score:" + Score.ToString();
 
         Damage(1);
+        ScoreUp(1);
     }
 
     public void Damage(int damage)
@@ -107,5 +112,10 @@ public class Player : MonoBehaviour
         {
             HP = MaxHP;
         }
+    }
+
+    public void ScoreUp(int score)
+    {
+        Score += score;
     }
 }
