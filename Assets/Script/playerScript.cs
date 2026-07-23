@@ -14,10 +14,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float restamina = 1.5f;
 
     [SerializeField] private TMP_Text staminaText;
+    [SerializeField] private TMP_Text HPText;
 
     public int HP = 600;
     public int MaxHP = 600;
     
+
+
     void Start()
     {
         
@@ -26,6 +29,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.isGameOver
+            || GameManagerScript.Instance.isGameStart == false)
+        {
+            return;
+        }
+
+
         Vector3 move = Vector3.zero;
 
         if (Keyboard.current.shiftKey.isPressed && stamina >= 0.0f)
@@ -74,14 +84,23 @@ public class Player : MonoBehaviour
         }
 
         staminaText.text = "Stamina:" + stamina.ToString("F1");
+        HPText.text = "HP:" + HP.ToString("F1");
+
+        Damage(1);
     }
 
-    void Damage(int damage)
+    public void Damage(int damage)
     {
         HP -= damage;
+
+        if (HP < 0)
+        {
+            HP = 0;
+            GameManagerScript.Instance.GameOver();
+        }
     }
 
-    void Heel(int heel)
+    public void Heel(int heel)
     {
         HP += heel;
         if (HP >= MaxHP)
