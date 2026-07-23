@@ -1,10 +1,11 @@
 // 火の玉
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FireBallSCR : MonoBehaviour
 {
     [Header("--- クローンの設定 ---")]
-    public float speed = 5.0f;
+    public float speed = 3.0f;
 
     [Header("--- 本体の設定 ---")]
     public GameObject FireBall; // インスペクターでプレハブまたは自分自身を設定
@@ -22,8 +23,12 @@ public class FireBallSCR : MonoBehaviour
 
     // 連射速度を制御するタイマー
     private float spawnTimer = 0.0f;
-    public float spawnInterval = 0.1f;
+    public float spawnInterval = 2.0f;
 
+    private float G_time = 0.0f;
+    private int SpeedUp = 0;
+
+    private Vector3 moveDirection;
     void Start()
     {
         // 画面からプレイヤー（Cube）を探す
@@ -52,22 +57,44 @@ public class FireBallSCR : MonoBehaviour
             {
                 transform.LookAt(playerTransform);
             }
+
+            if (playerTransform != null)
+            {
+                moveDirection = playerTransform.position - transform.position;
+                // 高さを固定（箱が地面にめり込んだり浮いたりするのを防ぐ）
+                moveDirection.y = 0;
+                // 方向の長さを1に整える（正規化）
+                moveDirection.Normalize();
+            }
         }
     }
 
     void Update()
     {
-        // 【本体の処理】複数の決まった位置から常に同時に出す
+        // 【本体の処理】複数の決まった位置から１つ選んで出す
         if (!isClone)
         {
-            spawnTimer += Time.deltaTime; // タイマーを進める
-            if (spawnTimer >= spawnInterval) // 0.1秒経ったら
+            G_time += Time.deltaTime;
+            if (G_time >= 15.0f && SpeedUp == 0)
             {
-                // 設定した位置（3箇所）からそれぞれクローンを生成
-                for (int i = 0; i < startPositions.Length; i++)
-                {
-                    // 本体の位置（transform.position）にずらし分（startPositions[i]）を足す
-                    Vector3 spawnPos = transform.position + startPositions[i];
+                spawnInterval = 1.0f;
+                SpeedUp = 1;
+            }
+            else if(G_time>= 60.0f && SpeedUp == 1)
+            {
+                spawnInterval = 0.5f;
+                SpeedUp = 2;
+            }
+
+            spawnTimer += Time.deltaTime; // タイマーを進める
+            if (spawnTimer >= spawnInterval) // 〇秒経ったら
+            {
+                int randomIndex = Random.Range(0, startPositions.Length);
+                // 設定した位置(インスペクタービュー)からそれぞれクローンを生成
+
+
+                // 本体の位置をrandomIndexで指定
+                Vector3 spawnPos = transform.position + startPositions[randomIndex];
 
                     GameObject clone = Instantiate(FireBall, spawnPos, Quaternion.identity);
 
@@ -77,7 +104,7 @@ public class FireBallSCR : MonoBehaviour
                         cloneScript.isClone = true;
                         cloneScript.playerTransform = this.playerTransform;
                     }
-                }
+                
 
                 spawnTimer = 0.0f; // タイマーリセット
             }
@@ -85,17 +112,10 @@ public class FireBallSCR : MonoBehaviour
         }
 
         // 【クローンの処理】プレイヤーに向かって進み続ける
-        if (playerTransform != null)
+        if (moveDirection != Vector3.zero)
         {
-            // 自分からプレイヤー（Cube）への「正しい方向（ベクトル）」を計算
-            Vector3 direction = playerTransform.position - transform.position;
-            //  高さを固定（箱が地面にめり込んだり浮いたりするのを防ぐ）
-            direction.y = 0;
-            //  方向の長さを1に整える（正規化）
-            direction.Normalize();
-
-            // 計算した方向へスピードの分だけ進む
-            transform.Translate(direction * speed * Time.deltaTime, Space.World);
+            // 計算済みの方向へスピードの分だけ進む
+            transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
         }
 
         // 画面端にいったら消去
@@ -104,15 +124,27 @@ public class FireBallSCR : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void OnTriggerEnter(Collider other)
+    {
+        CheckHit(other.gameObject);
+    }
 
+    // Is Trigger チェックなし（物理衝突）のとき
     public void OnCollisionEnter(Collision collision)
+    {
+        CheckHit(collision.gameObject);
+    }
+
+    // 当たり判定の共通処理
+    private void CheckHit(GameObject hitObject)
     {
         if (!isClone) return;
 
-        // ぶつかった相手の名前が「Cube」だったらクローンを削除
-        if (collision.gameObject.name == "Cube")
+        // 名前に Cube が含まれている（Cube, Cube(Clone) など）または Player タグの場合
+        if (hitObject.name.Contains("Cube") || hitObject.CompareTag("Player"))
         {
             Destroy(gameObject);
         }
     }
+
 }
