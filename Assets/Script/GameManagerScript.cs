@@ -8,13 +8,14 @@ public class GameManagerScript : MonoBehaviour
 {
     public static GameManagerScript Instance;
 
-    [SerializeField] private TMP_Text CountdownText;
+    [SerializeField] public TMP_Text CenterText;
     float countTime = 1.0f;
     public int CountDown = 3;
 
 
     public bool isGameOver = false;
     public bool isGameStart = false;
+    public bool isResult = false;
 
     void Awake()
     {
@@ -40,28 +41,31 @@ public class GameManagerScript : MonoBehaviour
             }
             if (CountDown > 0)
             {
-                CountdownText.text = CountDown.ToString();
+                CenterText.text = CountDown.ToString();
             }
             else if (CountDown <= -1)
             {
-                CountdownText.text = " ";
+                CenterText.text = " ";
             }
             else if (CountDown <= 0)
             {
                 isGameStart = true;
-                CountdownText.text = "GO!";
+                CenterText.text = "GO!";
             }
-            return;
         }
 
 
         if (isGameOver)
         {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            CenterText.text = "GameOver";
+                isResult = true;
+
+            if (isResult && Keyboard.current.jKey.wasPressedThisFrame)
             {
                 Restart();
             }
         }
+        
     }
 
     public void GameOver()

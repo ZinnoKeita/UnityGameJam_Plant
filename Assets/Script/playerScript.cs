@@ -4,6 +4,8 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float MoveSpeed = 5.0f;
 
