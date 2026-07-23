@@ -11,6 +11,7 @@ public class FireBallSCR : MonoBehaviour
     public GameObject FireBall; // インスペクターでプレハブまたは自分自身を設定
 
     // 「決まった位置」のリスト
+    //インスペクタービューで調整
     public Vector3[] startPositions = new Vector3[]
     {
         new Vector3(0.0f, 0.0f, 1.0f),
@@ -84,6 +85,16 @@ public class FireBallSCR : MonoBehaviour
             {
                 spawnInterval = 0.5f;
                 SpeedUp = 2;
+            }
+            else if (G_time >= 90.0f && SpeedUp == 2)
+            {
+                spawnInterval = 0.25f;
+                SpeedUp = 3;
+            }
+            else if (G_time >= 120.0f && SpeedUp == 3)
+            {
+                spawnInterval = 0.125f;
+                SpeedUp = 4;
             }
 
             spawnTimer += Time.deltaTime; // タイマーを進める
