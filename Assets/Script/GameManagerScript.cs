@@ -57,8 +57,12 @@ public class GameManagerScript : MonoBehaviour
 
         if (isGameOver)
         {
-            CenterText.text = "GameOver";
+            if (!isResult)
+            {
+                CenterText.text = "GameOver";
                 isResult = true;
+            }
+            
 
             if (isResult && Keyboard.current.jKey.wasPressedThisFrame)
             {
