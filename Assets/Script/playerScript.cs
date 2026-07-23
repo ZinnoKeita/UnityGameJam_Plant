@@ -92,8 +92,6 @@ public class Player : MonoBehaviour
         HPText.text = "HP:" + HP.ToString();
         ScoreText.text = "Score:" + Score.ToString();
 
-        Damage(1);
-        ScoreUp(1);
     }
 
     public void Damage(int damage)
