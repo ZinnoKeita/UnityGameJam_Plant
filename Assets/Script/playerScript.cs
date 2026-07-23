@@ -2,8 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
-public class player : MonoBehaviour
+public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float MoveSpeed = 5.0f;
 
@@ -14,7 +16,16 @@ public class player : MonoBehaviour
     [SerializeField] private float restamina = 1.5f;
 
     [SerializeField] private TMP_Text staminaText;
+    [SerializeField] private TMP_Text HPText;
+    [SerializeField] private TMP_Text ScoreText;
+
+    public int HP = 600;
+    public int MaxHP = 600;
+
+    public int Score = 0;
     
+
+
     void Start()
     {
         
@@ -23,6 +34,13 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.isGameOver
+            || GameManagerScript.Instance.isGameStart == false)
+        {
+            return;
+        }
+
+
         Vector3 move = Vector3.zero;
 
         if (Keyboard.current.shiftKey.isPressed && stamina >= 0.0f)
@@ -71,5 +89,33 @@ public class player : MonoBehaviour
         }
 
         staminaText.text = "Stamina:" + stamina.ToString("F1");
+        HPText.text = "HP:" + HP.ToString();
+        ScoreText.text = "Score:" + Score.ToString();
+
+    }
+
+    public void Damage(int damage)
+    {
+        HP -= damage;
+
+        if (HP < 0)
+        {
+            HP = 0;
+            GameManagerScript.Instance.GameOver();
+        }
+    }
+
+    public void Heel(int heel)
+    {
+        HP += heel;
+        if (HP >= MaxHP)
+        {
+            HP = MaxHP;
+        }
+    }
+
+    public void ScoreUp(int score)
+    {
+        Score += score;
     }
 }
