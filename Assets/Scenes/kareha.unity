@@ -580,7 +580,7 @@ MonoBehaviour:
   minZ: 5
   maxZ: -5
   spawnHeightY: 0.5
-  spawnInterval: 2
+  spawnInterval: 15
 --- !u!4 &852602186
 Transform:
   m_ObjectHideFlags: 0
