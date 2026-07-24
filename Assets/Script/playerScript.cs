@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections;
+
 
 public class Player : MonoBehaviour
 {
@@ -19,11 +21,18 @@ public class Player : MonoBehaviour
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text ScoreText;
 
-    public int HP = 600;
-    public int MaxHP = 600;
+    [SerializeField] private int HP = 600;
+    [SerializeField] private int MaxHP = 600;
 
     public int Score = 0;
-    
+
+    bool isInvincible = false;
+    [SerializeField] private float invincibleTime = 0.5f;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
 
     void Start()
@@ -96,13 +105,17 @@ public class Player : MonoBehaviour
 
     public void Damage(int damage)
     {
+        if (isInvincible) return;
+
         HP -= damage;
 
-        if (HP < 0)
+        if (HP <= 0)
         {
             HP = 0;
             GameManagerScript.Instance.GameOver();
         }
+
+        StartCoroutine(Invincible());
     }
 
     public void Heel(int heel)
@@ -117,5 +130,14 @@ public class Player : MonoBehaviour
     public void ScoreUp(int score)
     {
         Score += score;
+    }
+
+    IEnumerator Invincible()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(invincibleTime);
+
+        isInvincible = false;
     }
 }

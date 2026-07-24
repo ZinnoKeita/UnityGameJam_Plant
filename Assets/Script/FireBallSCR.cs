@@ -5,19 +5,26 @@ using UnityEngine.EventSystems;
 public class FireBallSCR : MonoBehaviour
 {
     [Header("--- クローンの設定 ---")]
-    public float speed = 3.0f;
+    public float speed = 5.0f;
 
     [Header("--- 本体の設定 ---")]
     public GameObject FireBall; // インスペクターでプレハブまたは自分自身を設定
 
     // 「決まった位置」のリスト
     //インスペクタービューで調整
-    public Vector3[] startPositions = new Vector3[]
-    {
-        new Vector3(0.0f, 0.0f, 1.0f),
-        new Vector3(2.0f, 0.0f, 2.0f),
-        new Vector3(2.0f, 0.0f, 0.0f)
-    };
+    //public Vector3[] startPositions = new Vector3[]
+    //{
+    //    new Vector3(0.0f, 0.0f, 1.0f),
+    //    new Vector3(2.0f, 0.0f, 2.0f),
+    //    new Vector3(2.0f, 0.0f, 0.0f)
+    //};
+
+    [SerializeField] private Transform[] spawnPoints;
+
+    [SerializeField] private int Damage = 50;
+
+
+
 
     public Transform playerTransform;
     private bool isClone = false;
@@ -33,7 +40,7 @@ public class FireBallSCR : MonoBehaviour
     void Start()
     {
         // 画面からプレイヤー（Cube）を探す
-        GameObject player = GameObject.Find("Cube");
+        GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
             playerTransform = player.transform;
@@ -72,6 +79,12 @@ public class FireBallSCR : MonoBehaviour
 
     void Update()
     {
+
+        if (GameManagerScript.Instance.isGameStart == false)
+        {
+            return;
+        }
+
         // 【本体の処理】複数の決まった位置から１つ選んで出す
         if (!isClone)
         {
@@ -81,7 +94,7 @@ public class FireBallSCR : MonoBehaviour
                 spawnInterval = 1.0f;
                 SpeedUp = 1;
             }
-            else if(G_time>= 60.0f && SpeedUp == 1)
+            else if (G_time >= 60.0f && SpeedUp == 1)
             {
                 spawnInterval = 0.5f;
                 SpeedUp = 2;
@@ -100,22 +113,29 @@ public class FireBallSCR : MonoBehaviour
             spawnTimer += Time.deltaTime; // タイマーを進める
             if (spawnTimer >= spawnInterval) // 〇秒経ったら
             {
-                int randomIndex = Random.Range(0, startPositions.Length);
-                // 設定した位置(インスペクタービュー)からそれぞれクローンを生成
+                //int randomIndex = Random.Range(0, startPositions.Length);
+                //// 設定した位置(インスペクタービュー)からそれぞれクローンを生成
 
 
-                // 本体の位置をrandomIndexで指定
-                Vector3 spawnPos = transform.position + startPositions[randomIndex];
+                //// 本体の位置をrandomIndexで指定
+                //Vector3 spawnPos = transform.position + startPositions[randomIndex];
 
-                    GameObject clone = Instantiate(FireBall, spawnPos, Quaternion.identity);
+                //GameObject clone = Instantiate(FireBall, spawnPos, Quaternion.identity);
 
-                    FireBallSCR cloneScript = clone.GetComponent<FireBallSCR>();
-                    if (cloneScript != null)
-                    {
-                        cloneScript.isClone = true;
-                        cloneScript.playerTransform = this.playerTransform;
-                    }
-                
+                int index = Random.Range(0, spawnPoints.Length);
+
+                GameObject clone = Instantiate(
+                    FireBall,
+                    spawnPoints[index].position,
+                    Quaternion.identity);
+
+                FireBallSCR cloneScript = clone.GetComponent<FireBallSCR>();
+                if (cloneScript != null)
+                {
+                    cloneScript.isClone = true;
+                    cloneScript.playerTransform = this.playerTransform;
+                }
+
 
                 spawnTimer = 0.0f; // タイマーリセット
             }
@@ -149,13 +169,19 @@ public class FireBallSCR : MonoBehaviour
     // 当たり判定の共通処理
     private void CheckHit(GameObject hitObject)
     {
+        
+
         if (!isClone) return;
 
-        // 名前に Cube が含まれている（Cube, Cube(Clone) など）または Player タグの場合
-        if (hitObject.name.Contains("Cube") || hitObject.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-        }
+            // 名前に Cube が含まれている（Cube, Cube(Clone) など）または Player タグの場合
+            if (hitObject.name.Contains("Cube") || hitObject.CompareTag("Player"))
+            {
+                Player player = hitObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.Damage(Damage);
+                }
+                Destroy(gameObject);
+            }
     }
-
 }
