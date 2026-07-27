@@ -20,9 +20,13 @@ public class Player : MonoBehaviour
     [SerializeField] private TMP_Text staminaText;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text ScoreText;
+    [SerializeField] private TMP_Text HealItemText;
 
     [SerializeField] private int HP = 600;
     [SerializeField] private int MaxHP = 600;
+
+    [SerializeField] private int HealItemCount = 3;
+    [SerializeField] private int HealAmount = 150;
 
     public int Score = 0;
 
@@ -97,9 +101,15 @@ public class Player : MonoBehaviour
                 10f * Time.deltaTime);
         }
 
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            UseHealItem();
+        }
+
         staminaText.text = "Stamina:" + stamina.ToString("F1");
         HPText.text = "HP:" + HP.ToString();
         ScoreText.text = "Score:" + Score.ToString();
+        HealItemText.text = "Heal ×" + HealItemCount;
 
     }
 
@@ -121,6 +131,24 @@ public class Player : MonoBehaviour
         HPText.text = "HP:" + HP.ToString();
 
     }
+
+    public void UseHealItem()
+    {
+        if (HealItemCount <= 0)
+        {
+            return;
+        }
+
+        if (HP >= MaxHP)
+        {
+            return;
+        }
+
+        Heel(HealAmount);
+
+        HealItemCount--;
+    }
+
 
     public void Heel(int heel)
     {
