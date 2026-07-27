@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int HealItemCount = 3;
     [SerializeField] private int HealAmount = 150;
 
+    [SerializeField] private GameObject PlayerCanvas;
+
     public int Score = 0;
 
     bool isInvincible = false;
@@ -50,9 +52,10 @@ public class Player : MonoBehaviour
         if (GameManagerScript.Instance.isGameOver
             || GameManagerScript.Instance.isGameStart == false)
         {
+            PlayerCanvas.SetActive(false);
             return;
         }
-
+        PlayerCanvas.SetActive(true);
 
         Vector3 move = Vector3.zero;
 

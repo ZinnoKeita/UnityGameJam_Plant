@@ -52,8 +52,6 @@ public class karehamanager : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("Particle Hit:" + other.name);
-
         if (other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
