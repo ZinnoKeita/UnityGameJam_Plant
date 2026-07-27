@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -26,6 +27,9 @@ public class UISCR : MonoBehaviour
     private float NowHP = 500.0f;//今のHP
     private float MaxHP = 500.0f;//さいだいHP 
 
+    private float katenTimer = 0.0f; //自動加点タイマー
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -38,25 +42,40 @@ public class UISCR : MonoBehaviour
         NowTime += Time.deltaTime;
         UpdateTimer(NowTime);
 
-        //テスト用
+        katenTimer += Time.deltaTime;
+
+        if (katenTimer >= 1.0f) // 1秒経過したら実行
+        {
+            katenTimer -= 1.0f; // 1秒の端数を引いて正確に刻む
+
+            // 時間帯ごとの自動加算ポイントを決める
+            int autoPoints = 100; // 0〜30秒未満
+            if (NowTime >= 60.0f)
+            {
+                autoPoints = 300; // 1分以降
+            }
+            else if (NowTime >= 30.0f)
+            {
+                autoPoints = 200; // 30秒〜1分未満
+            }
+            Score += autoPoints;
+            UpdateScoreDisplay();
+
+        }
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             AddScoreAndGraze(100);
         }
-
     }
     public void AddScoreAndGraze(int addscor)
     {
-        Score += addscor;
 
-        if (scoreText != null)
-        {
-            scoreText.text = "得点" + Score.ToString("00000");
-        }
-        else
-        {
-            Debug.LogWarning("scoreTextがアタッチされていません！");
-        }
+        Score += addscor;
+        UpdateScoreDisplay();
+
+
+   
+        
 
         if (grazePopupPrefab != null && canvasTransform != null)
         {
@@ -87,6 +106,13 @@ public class UISCR : MonoBehaviour
                 }
             }
             Destroy(instance, 1.0f);
+        }
+    }
+    private void UpdateScoreDisplay()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score" + Score.ToString("00000");
         }
     }
     private void UpdateTimer(float timeSeconds)
