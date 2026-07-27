@@ -17,6 +17,10 @@ public class UISCR : MonoBehaviour
     public GameObject grazePopupPrefab;
     public Transform canvasTransform;
 
+    [Header("---プレイヤー追従設定---")]
+    public Transform playerTransform; // プレイヤーのTransformをアタッチ
+    public Vector3 headOffset = new Vector3(0, 1.5f, 0); // プレイヤーの頭上のオフセット
+
     private float NowTime = 0.0f;//時間
     private int Score = 0;
     private float NowHP = 500.0f;//今のHP
@@ -37,7 +41,6 @@ public class UISCR : MonoBehaviour
         //テスト用
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Debug.Log("スペースキーが押された");
             AddScoreAndGraze(100);
         }
 
@@ -57,23 +60,48 @@ public class UISCR : MonoBehaviour
 
         if (grazePopupPrefab != null && canvasTransform != null)
         {
-            GameObject popup = Instantiate(grazePopupPrefab, canvasTransform);
-            //簡易的に中央に配置している
-            popup.transform.localPosition = new Vector3(0, 0, 0);
-            Destroy(popup, 1.0f);
-        }
+            //生成
+            GameObject instance = Instantiate(grazePopupPrefab, canvasTransform);
+            //初期化
+            GrazeSCR popupScript = instance.GetComponent<GrazeSCR>();
+            if (popupScript != null && playerTransform != null && Camera.main != null)
+            {
+                Canvas canvasComp = canvasTransform.GetComponentInParent<Canvas>();
+                popupScript.Initialize(playerTransform, headOffset, canvasComp, Camera.main);
 
+               
+                Vector3 worldPosition = playerTransform.position + headOffset;
+                Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, worldPosition);
+
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasComp.GetComponent<RectTransform>(),
+                    screenPoint,
+                    canvasComp.renderMode == RenderMode.ScreenSpaceOverlay ? null : Camera.main,
+                    out Vector2 localPoint))
+                {
+                    RectTransform rect = instance.GetComponent<RectTransform>();
+                    if (rect != null)
+                    {
+                        rect.anchoredPosition = localPoint;
+                    }
+                }
+            }
+            Destroy(instance, 1.0f);
+        }
     }
     private void UpdateTimer(float timeSeconds)
     {
         int min = Mathf.FloorToInt(timeSeconds / 60);
         int sec = Mathf.FloorToInt(timeSeconds % 60);
-        int millsec= Mathf .FloorToInt((timeSeconds * 100)%100);
+        int millsec = Mathf.FloorToInt((timeSeconds * 100) % 100);
 
-        timerText.text = $"{min:00}:{sec:00}.{millsec:00}";
-
+        if (timerText != null)
+        {
+            timerText.text = $"{min:00}:{sec:00}.{millsec:00}";
+        }
     }
-     public void ChangeHP(float amount)
+
+    public void ChangeHP(float amount)
      {
         NowHP = Mathf.Clamp(NowHP + amount, 0, MaxHP);
         hpBarImage.fillAmount = NowHP / MaxHP;
