@@ -22,6 +22,10 @@ public class MainCameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.isGameTitle)
+        {
+            return;
+        }
         if (starttimer < moveTime)
         {
             starttimer += Time.deltaTime;
@@ -52,6 +56,7 @@ public class MainCameraScript : MonoBehaviour
             if (endtimer >= 3.0f)
             {
                 GameManagerScript.Instance.CenterText.text = " ";
+                GameManagerScript.Instance.ResultCanvas.SetActive(true);
             }
         }
     }

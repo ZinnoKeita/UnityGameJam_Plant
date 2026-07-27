@@ -79,7 +79,11 @@ public class FireBallSCR : MonoBehaviour
 
     void Update()
     {
-
+        if (GameManagerScript.Instance.isGameOver)
+        {
+            Destroy(gameObject);
+            return;
+        }
         if (GameManagerScript.Instance.isGameStart == false)
         {
             return;
@@ -108,6 +112,10 @@ public class FireBallSCR : MonoBehaviour
             {
                 spawnInterval = 0.125f;
                 SpeedUp = 4;
+            }else if(G_time >= 300.0f && SpeedUp == 4)
+            {
+                spawnInterval = 0.1f;
+                SpeedUp = 5;
             }
 
             spawnTimer += Time.deltaTime; // タイマーを進める

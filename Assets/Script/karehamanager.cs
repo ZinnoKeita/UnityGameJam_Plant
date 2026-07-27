@@ -49,4 +49,18 @@ public class karehamanager : MonoBehaviour
         // パーティクルが消え切るまで1秒待ってからオブジェクトを削除
         Destroy(gameObject, 1.0f);
     }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Player player = other.GetComponent<Player>();
+
+            if (player != null)
+            {
+                player.Damage(40);
+            }
+        }
+    }
+
 }

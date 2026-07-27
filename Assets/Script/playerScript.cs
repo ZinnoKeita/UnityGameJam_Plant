@@ -20,9 +20,15 @@ public class Player : MonoBehaviour
     [SerializeField] private TMP_Text staminaText;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text ScoreText;
+    [SerializeField] private TMP_Text HealItemText;
 
     [SerializeField] private int HP = 600;
     [SerializeField] private int MaxHP = 600;
+
+    [SerializeField] private int HealItemCount = 3;
+    [SerializeField] private int HealAmount = 150;
+
+    [SerializeField] private GameObject PlayerCanvas;
 
     public int Score = 0;
 
@@ -46,9 +52,10 @@ public class Player : MonoBehaviour
         if (GameManagerScript.Instance.isGameOver
             || GameManagerScript.Instance.isGameStart == false)
         {
+            PlayerCanvas.SetActive(false);
             return;
         }
-
+        PlayerCanvas.SetActive(true);
 
         Vector3 move = Vector3.zero;
 
@@ -97,9 +104,15 @@ public class Player : MonoBehaviour
                 10f * Time.deltaTime);
         }
 
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            UseHealItem();
+        }
+
         staminaText.text = "Stamina:" + stamina.ToString("F1");
         HPText.text = "HP:" + HP.ToString();
         ScoreText.text = "Score:" + Score.ToString();
+        HealItemText.text = "Heal ×" + HealItemCount;
 
     }
 
@@ -109,14 +122,36 @@ public class Player : MonoBehaviour
 
         HP -= damage;
 
+        StartCoroutine(Invincible());
+
         if (HP <= 0)
         {
             HP = 0;
+            HPText.text = "HP:" + HP.ToString();
             GameManagerScript.Instance.GameOver();
+            return;
+        }
+        HPText.text = "HP:" + HP.ToString();
+
+    }
+
+    public void UseHealItem()
+    {
+        if (HealItemCount <= 0)
+        {
+            return;
         }
 
-        StartCoroutine(Invincible());
+        if (HP >= MaxHP)
+        {
+            return;
+        }
+
+        Heel(HealAmount);
+
+        HealItemCount--;
     }
+
 
     public void Heel(int heel)
     {
@@ -129,6 +164,10 @@ public class Player : MonoBehaviour
 
     public void ScoreUp(int score)
     {
+        if (GameManagerScript.Instance.isGameOver)
+        {
+            return;
+        }
         Score += score;
     }
 
