@@ -164,6 +164,10 @@ public class Player : MonoBehaviour
 
     public void ScoreUp(int score)
     {
+        if (GameManagerScript.Instance.isGameOver)
+        {
+            return;
+        }
         Score += score;
     }
 
