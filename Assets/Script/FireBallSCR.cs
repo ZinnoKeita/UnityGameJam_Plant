@@ -79,7 +79,11 @@ public class FireBallSCR : MonoBehaviour
 
     void Update()
     {
-
+        if (GameManagerScript.Instance.isGameOver)
+        {
+            Destroy(gameObject);
+            return;
+        }
         if (GameManagerScript.Instance.isGameStart == false)
         {
             return;

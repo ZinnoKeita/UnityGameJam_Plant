@@ -109,13 +109,17 @@ public class Player : MonoBehaviour
 
         HP -= damage;
 
+        StartCoroutine(Invincible());
+
         if (HP <= 0)
         {
             HP = 0;
+            HPText.text = "HP:" + HP.ToString();
             GameManagerScript.Instance.GameOver();
+            return;
         }
+        HPText.text = "HP:" + HP.ToString();
 
-        StartCoroutine(Invincible());
     }
 
     public void Heel(int heel)

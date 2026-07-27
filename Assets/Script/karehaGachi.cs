@@ -27,6 +27,13 @@ public class karehaGachi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.isGameOver)
+        {
+            return;
+        }
+
+
+
         timer += Time.deltaTime;
 
         if(timer>=spawnInterval)
