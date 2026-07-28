@@ -158,7 +158,7 @@ public class FireBallSCR : MonoBehaviour
         }
 
         // 画面端にいったら消去
-        if (transform.position.x > 40.0f || transform.position.x < -40.0f || transform.position.z > 40.0f || transform.position.z < -40.0f)
+        if (transform.position.x > 1000.0f || transform.position.x < -1000.0f || transform.position.z > 1000.0f || transform.position.z < -1000.0f)
         {
             Destroy(gameObject);
         }
