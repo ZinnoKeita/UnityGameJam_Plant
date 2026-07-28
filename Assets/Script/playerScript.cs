@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections;
-
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -16,14 +16,18 @@ public class Player : MonoBehaviour
     [SerializeField] private float staminaRecovery = 1.5f;
     [SerializeField] private float staminaConsumption = 2.0f;
     [SerializeField] private float restamina = 1.5f;
+    
 
     [SerializeField] private TMP_Text staminaText;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text ScoreText;
     [SerializeField] private TMP_Text HealItemText;
 
-    [SerializeField] private int HP = 600;
-    [SerializeField] private int MaxHP = 600;
+    [SerializeField] private Image hpBarImage;
+    [SerializeField] private Image staminaBatImage;
+
+    [SerializeField] private int HP = 500;
+    [SerializeField] private int MaxHP = 500;
 
     [SerializeField] private int HealItemCount = 3;
     [SerializeField] private int HealAmount = 150;
@@ -109,10 +113,16 @@ public class Player : MonoBehaviour
             UseHealItem();
         }
 
-        staminaText.text = "Stamina:" + stamina.ToString("F1");
-        HPText.text = "HP:" + HP.ToString();
+        //staminaText.text = "Stamina:" + stamina.ToString("F1");
+        
         ScoreText.text = "Score:" + Score.ToString();
-        HealItemText.text = "Heal ×" + HealItemCount;
+        HealItemText.text = "HealItem ×" + HealItemCount;
+
+        //HPText.text = "HP " + HP.ToString() + "/" + MaxHP.ToString();
+        
+        hpBarImage.fillAmount = (float)HP / MaxHP;
+        HPText.text = $"HP {HP}/{MaxHP}";
+        staminaBatImage.fillAmount = stamina / maxStamina;
 
     }
 
@@ -127,11 +137,12 @@ public class Player : MonoBehaviour
         if (HP <= 0)
         {
             HP = 0;
-            HPText.text = "HP:" + HP.ToString();
+            HPText.text = $"HP {HP}/{MaxHP}";
             GameManagerScript.Instance.GameOver();
             return;
         }
-        HPText.text = "HP:" + HP.ToString();
+        //hpBarImage.fillAmount = (float)HP / MaxHP;
+        HPText.text = $"HP {HP}/{MaxHP}";
 
     }
 
@@ -146,6 +157,10 @@ public class Player : MonoBehaviour
         {
             return;
         }
+
+        //hpBarImage.fillAmount = (float)HP / MaxHP;
+        HPText.text = $"HP {HP}/{MaxHP}";
+
 
         Heel(HealAmount);
 

@@ -39,6 +39,8 @@ public class UISCR : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         NowTime += Time.deltaTime;
         UpdateTimer(NowTime);
 
