@@ -1,15 +1,23 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
-using System.Collections;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public static Player instance;
-
+    private CharacterController controller;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public float MoveSpeed = 5.0f;
+    [SerializeField] private float walkSpeed = 75.0f;
+    [SerializeField] private float runSpeed = 150.0f;
+
+    [SerializeField] private float waterSpeed = 0.01f;
+
+    private bool isInWater = false;
+
+    private float moveSpeed;
 
     [SerializeField] private float maxStamina = 5.0f;
     [SerializeField] private float stamina = 5.0f;
@@ -47,7 +55,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -65,18 +73,22 @@ public class Player : MonoBehaviour
 
         if (Keyboard.current.shiftKey.isPressed && stamina >= 0.0f)
         {
-            MoveSpeed = 10.0f;
+            moveSpeed = runSpeed;
             stamina -= staminaConsumption * Time.deltaTime;
             restamina = 1.5f;
         }
         else
         {
-            MoveSpeed = 5.0f;
+            moveSpeed = walkSpeed;
             restamina -= Time.deltaTime;
             if (restamina <= 0.0f&&stamina <= maxStamina)
             {
                 stamina += staminaRecovery * Time.deltaTime;
             }
+        }
+        if (isInWater)
+        {
+            moveSpeed *= waterSpeed;
         }
 
 
@@ -96,7 +108,7 @@ public class Player : MonoBehaviour
         {
             move += Vector3.right;
         }
-        transform.position += move.normalized * MoveSpeed * Time.deltaTime;
+        controller.Move(move.normalized * moveSpeed * Time.deltaTime);
 
         if (move != Vector3.zero)
         {
@@ -193,5 +205,21 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(invincibleTime);
 
         isInvincible = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            isInWater = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            isInWater = false;
+        }
     }
 }
