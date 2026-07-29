@@ -35307,7 +35307,8 @@ MonoBehaviour:
   isResult: 0
   isGameTitle: 1
   audioSource: {fileID: 1423941845}
-  gameoverBGM: {fileID: 8300000, guid: b79a30245eecd5942adca42f0588956c, type: 3}
+  gameoverSE: {fileID: 8300000, guid: b79a30245eecd5942adca42f0588956c, type: 3}
+  titleBGM: {fileID: 8300000, guid: f90f37fe53b549c4da7684b21f0b7de7, type: 3}
 --- !u!4 &1423941844
 Transform:
   m_ObjectHideFlags: 0

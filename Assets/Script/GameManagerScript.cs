@@ -39,7 +39,8 @@ public class GameManagerScript : MonoBehaviour
     int seconds;
 
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip gameoverBGM;
+    [SerializeField] private AudioClip gameoverSE;
+    [SerializeField] private AudioClip titleBGM;
 
 
     void Awake()
@@ -54,6 +55,10 @@ public class GameManagerScript : MonoBehaviour
     {
         StartText.text = "Press the Enterkey";
         TitleText.text ="Plant Escape";
+
+        audioSource.clip = titleBGM;
+        audioSource.loop = true;
+        audioSource.Play();
     }
 
     // Update is called once per frame
@@ -65,6 +70,7 @@ public class GameManagerScript : MonoBehaviour
 
             if (Keyboard.current.enterKey.wasPressedThisFrame)
             {
+                audioSource.Stop();
                 isGameTitle = false;
             }
             return;
@@ -174,7 +180,8 @@ public class GameManagerScript : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        audioSource.PlayOneShot(gameoverBGM);
+        audioSource.Stop();
+        audioSource.PlayOneShot(gameoverSE);
     }
 
     public void Restart()
