@@ -80,9 +80,13 @@ public class Player : MonoBehaviour
         }
         PlayerCanvas.SetActive(true);
 
-        Vector3 move = Vector3.zero;
+       
 
-        if (Keyboard.current.shiftKey.isPressed && stamina >= 0.0f)
+        bool isRun =
+            Keyboard.current.shiftKey.isPressed ||
+            (Gamepad.current != null && Gamepad.current.rightShoulder.isPressed);
+
+        if (isRun && stamina >= 0.0f)
         {
             moveSpeed = runSpeed;
             stamina -= staminaConsumption * Time.deltaTime;
@@ -103,22 +107,20 @@ public class Player : MonoBehaviour
         }
 
 
-        if (Keyboard.current.wKey.isPressed)
-        {
-            move += Vector3.forward;
-        }
-        if (Keyboard.current.sKey.isPressed)
-        {
-            move += Vector3.back;
-        }
-        if (Keyboard.current.aKey.isPressed)
-        {
-            move += Vector3.left;
-        }
-        if (Keyboard.current.dKey.isPressed)
-        {
-            move += Vector3.right;
-        }
+        Vector2 stick = Gamepad.current != null
+            ? Gamepad.current.leftStick.ReadValue()
+            : Vector2.zero;
+
+        Vector3 move = new Vector3(stick.x, 0, stick.y);
+
+        if (Keyboard.current.wKey.isPressed) move += Vector3.forward;
+
+        if (Keyboard.current.sKey.isPressed) move += Vector3.back;
+        
+        if (Keyboard.current.aKey.isPressed) move += Vector3.left;
+        
+        if (Keyboard.current.dKey.isPressed) move += Vector3.right;
+        
         controller.Move(move.normalized * moveSpeed * Time.deltaTime);
 
         if (move != Vector3.zero)
@@ -131,7 +133,8 @@ public class Player : MonoBehaviour
                 10f * Time.deltaTime);
         }
 
-        if (Keyboard.current.fKey.wasPressedThisFrame)
+        if (Keyboard.current.fKey.wasPressedThisFrame||
+            (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame))
         {
             UseHealItem();
         }

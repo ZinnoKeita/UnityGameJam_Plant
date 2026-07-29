@@ -56,7 +56,7 @@ public class GameManagerScript : MonoBehaviour
 
     void Start()
     {
-        StartText.text = "Press the Enterkey";
+        StartText.text = "Press the A button or Enterkey";
         TitleText.text ="Plant Escape";
 
         audioSource.clip = titleBGM;
@@ -73,11 +73,29 @@ public class GameManagerScript : MonoBehaviour
         {
             TitleCanvas.SetActive(true);
 
-            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            if (Keyboard.current.enterKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame))
             {
                 audioSource.Stop();
                 isGameTitle = false;
             }
+
+            //if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            //{
+            //    Application.Quit();
+            //}
+
+            if (Keyboard.current.escapeKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+            }
+
+
 
             if (Keyboard.current.yKey.wasPressedThisFrame)
             {
@@ -100,17 +118,6 @@ public class GameManagerScript : MonoBehaviour
                 cheatCode = "";
             }
 
-            //if (Keyboard.current.yKey.isPressed
-            //    && Keyboard.current.hKey.isPressed
-            //    && Keyboard.current.jKey.isPressed&&!aaaaa)
-            //{
-            //    aaaaa = true;
-            //}else if(Keyboard.current.yKey.isPressed
-            //    && Keyboard.current.hKey.isPressed
-            //    && Keyboard.current.jKey.isPressed && aaaaa)
-            //{
-            //    aaaaa = false;
-            //}
 
             return;
         }
@@ -158,9 +165,10 @@ public class GameManagerScript : MonoBehaviour
            
             ScoreText.text = "スコア:" + Player.instance.Score;
             TimeText.text = "生存時間:" +$"{minutes:00}:{seconds:00}";
-            TitleGoText.text = "Press the Enterkey";
+            TitleGoText.text = "Press the A button or Enterkey";
 
-            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            if (Keyboard.current.enterKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame))
             {
                 Restart();
             }
@@ -179,6 +187,12 @@ public class GameManagerScript : MonoBehaviour
 
             surviveTimeText.text = $"{minutes:00}:{seconds:00}";
 
+
+            if (Keyboard.current.escapeKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
+            {
+                Restart();
+            }
            
         }
         
