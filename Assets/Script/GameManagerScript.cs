@@ -38,6 +38,10 @@ public class GameManagerScript : MonoBehaviour
     int minutes;
     int seconds;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip gameoverBGM;
+
+
     void Awake()
     {
         Instance = this;
@@ -95,6 +99,7 @@ public class GameManagerScript : MonoBehaviour
         if (isGameOver)
         {
             GameCanvas.SetActive(true);
+            
 
             if (!isResult)
             {
@@ -169,6 +174,7 @@ public class GameManagerScript : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
+        audioSource.PlayOneShot(gameoverBGM);
     }
 
     public void Restart()

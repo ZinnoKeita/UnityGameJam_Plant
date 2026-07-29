@@ -14,6 +14,9 @@ public class karehamanager : MonoBehaviour
     [SerializeField] private float minDuration = 5.0f;
     [SerializeField] private float maxDuration = 5.0f;
 
+    [SerializeField] private AudioSource audiosource;
+    [SerializeField] private AudioClip sprayAudio;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,6 +37,13 @@ public class karehamanager : MonoBehaviour
         {
             sprayParticles.Play();
         }
+
+        if(audiosource != null && !audiosource.isPlaying)
+        {
+            audiosource.clip = sprayAudio;
+            audiosource.loop = true;
+            audiosource.Play();
+        }
     }
 
     public void StopSpraying()
@@ -41,6 +51,11 @@ public class karehamanager : MonoBehaviour
         if (sprayParticles != null && sprayParticles.isPlaying)
         {
             sprayParticles.Stop();
+        }
+
+        if (audiosource != null && audiosource.isPlaying)
+        {
+            audiosource.Stop();
         }
     }
     private void SelfDestroy()

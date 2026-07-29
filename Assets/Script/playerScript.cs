@@ -42,6 +42,10 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameObject PlayerCanvas;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hitSE;
+    [SerializeField] private AudioClip healSE;
+
     public int Score = 0;
 
     bool isInvincible = false;
@@ -143,6 +147,7 @@ public class Player : MonoBehaviour
         if (GameManagerScript.Instance.isGameOver) return;
         if (isInvincible) return;
 
+        
         HP -= damage;
         if (HP <= 0)
         {
@@ -164,7 +169,8 @@ public class Player : MonoBehaviour
         //}
         //hpBarImage.fillAmount = (float)HP / MaxHP;
         HPText.text = $"HP {HP}/{MaxHP}";
-
+        audioSource.PlayOneShot(hitSE);
+        
     }
 
     public void UseHealItem()
@@ -191,6 +197,8 @@ public class Player : MonoBehaviour
 
     public void Heel(int heel)
     {
+        audioSource.PlayOneShot(healSE);
+
         HP += heel;
         if (HP >= MaxHP)
         {
