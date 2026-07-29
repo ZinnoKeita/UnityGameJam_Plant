@@ -140,19 +140,28 @@ public class Player : MonoBehaviour
 
     public void Damage(int damage)
     {
+        if (GameManagerScript.Instance.isGameOver) return;
         if (isInvincible) return;
 
         HP -= damage;
-
-        StartCoroutine(Invincible());
-
         if (HP <= 0)
         {
             HP = 0;
+            hpBarImage.fillAmount = (float)HP / MaxHP;
             HPText.text = $"HP {HP}/{MaxHP}";
             GameManagerScript.Instance.GameOver();
             return;
         }
+        StartCoroutine(Invincible());
+
+        //if (HP <= 0)
+        //{
+        //    HP = 0;
+        //    hpBarImage.fillAmount = (float)HP / MaxHP;
+        //    HPText.text = $"HP {HP}/{MaxHP}";
+        //    GameManagerScript.Instance.GameOver();
+        //    return;
+        //}
         //hpBarImage.fillAmount = (float)HP / MaxHP;
         HPText.text = $"HP {HP}/{MaxHP}";
 
