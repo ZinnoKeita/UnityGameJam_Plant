@@ -39,7 +39,12 @@ public class GameManagerScript : MonoBehaviour
     int seconds;
 
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip gameoverBGM;
+    [SerializeField] private AudioClip gameoverSE;
+    [SerializeField] private AudioClip titleBGM;
+    [SerializeField] private AudioClip inGameBGM;
+
+    string cheatCode = "";
+    public bool aaaaa = false;
 
 
     void Awake()
@@ -52,8 +57,15 @@ public class GameManagerScript : MonoBehaviour
 
     void Start()
     {
-        StartText.text = "Press the Enterkey";
+        StartText.text = "Press the A button or Enterkey";
         TitleText.text ="Plant Escape";
+
+        audioSource.clip = titleBGM;
+        audioSource.volume = 0.5f;
+        audioSource.loop = true;
+        audioSource.Play();
+
+        
     }
 
     // Update is called once per frame
@@ -63,10 +75,63 @@ public class GameManagerScript : MonoBehaviour
         {
             TitleCanvas.SetActive(true);
 
-            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            if (Keyboard.current.enterKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame))
             {
+                audioSource.Stop();
+
+                audioSource.clip = inGameBGM;
+                audioSource.volume = 0.3f;
+                audioSource.loop = true;
+                
+
                 isGameTitle = false;
             }
+
+            //if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            //{
+            //    Application.Quit();
+            //}
+
+            if (Keyboard.current.escapeKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+            }
+
+
+
+            if (Keyboard.current.yKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame))
+            {
+                cheatCode += "Y";
+            }
+
+            if (Keyboard.current.hKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.xButton.wasPressedThisFrame))
+            {
+                cheatCode += "H";
+            }
+
+            if (Keyboard.current.jKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame))
+            {
+                cheatCode += "J";
+            }
+
+            if (cheatCode.Contains("YHJ"))
+            {
+                aaaaa = !aaaaa;
+                cheatCode = "";
+            }
+
+
+
+
             return;
         }
         TitleCanvas.SetActive(false);
@@ -84,14 +149,18 @@ public class GameManagerScript : MonoBehaviour
             {
                 CenterText.text = CountDown.ToString();
             }
-            else if (CountDown <= -1)
+            else if (CountDown == -1)
             {
+                
+                isGameStart = true;
                 GameCanvas.SetActive(false);
             }
-            else if (CountDown <= 0)
+            else if (CountDown == 0)
             {
-                isGameStart = true;
+                
                 CenterText.text = "GO!";
+                audioSource.Play();
+
             }
         }
 
@@ -113,9 +182,10 @@ public class GameManagerScript : MonoBehaviour
            
             ScoreText.text = "スコア:" + Player.instance.Score;
             TimeText.text = "生存時間:" +$"{minutes:00}:{seconds:00}";
-            TitleGoText.text = "Press the Enterkey";
+            TitleGoText.text = "Press the A button or Enterkey";
 
-            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            if (Keyboard.current.enterKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame))
             {
                 Restart();
             }
@@ -124,6 +194,7 @@ public class GameManagerScript : MonoBehaviour
 
         if (!isGameOver && isGameStart)
         {
+            
 
             GameCanvas.SetActive(false);
             surviveTime += Time.deltaTime;
@@ -134,6 +205,12 @@ public class GameManagerScript : MonoBehaviour
 
             surviveTimeText.text = $"{minutes:00}:{seconds:00}";
 
+
+            if (Keyboard.current.escapeKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
+            {
+                Restart();
+            }
            
         }
         
@@ -174,7 +251,8 @@ public class GameManagerScript : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        audioSource.PlayOneShot(gameoverBGM);
+        audioSource.Stop();
+        audioSource.PlayOneShot(gameoverSE);
     }
 
     public void Restart()

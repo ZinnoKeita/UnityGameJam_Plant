@@ -46,6 +46,8 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip hitSE;
     [SerializeField] private AudioClip healSE;
 
+    
+
     public int Score = 0;
 
     bool isInvincible = false;
@@ -65,6 +67,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.aaaaa)
+        {
+            invincibleTime = 0.0f;
+        }
+
         if (GameManagerScript.Instance.isGameOver
             || GameManagerScript.Instance.isGameStart == false)
         {
@@ -73,9 +80,13 @@ public class Player : MonoBehaviour
         }
         PlayerCanvas.SetActive(true);
 
-        Vector3 move = Vector3.zero;
+       
 
-        if (Keyboard.current.shiftKey.isPressed && stamina >= 0.0f)
+        bool isRun =
+            Keyboard.current.shiftKey.isPressed ||
+            (Gamepad.current != null && Gamepad.current.rightShoulder.isPressed);
+
+        if (isRun && stamina >= 0.0f)
         {
             moveSpeed = runSpeed;
             stamina -= staminaConsumption * Time.deltaTime;
@@ -96,22 +107,20 @@ public class Player : MonoBehaviour
         }
 
 
-        if (Keyboard.current.wKey.isPressed)
-        {
-            move += Vector3.forward;
-        }
-        if (Keyboard.current.sKey.isPressed)
-        {
-            move += Vector3.back;
-        }
-        if (Keyboard.current.aKey.isPressed)
-        {
-            move += Vector3.left;
-        }
-        if (Keyboard.current.dKey.isPressed)
-        {
-            move += Vector3.right;
-        }
+        Vector2 stick = Gamepad.current != null
+            ? Gamepad.current.leftStick.ReadValue()
+            : Vector2.zero;
+
+        Vector3 move = new Vector3(stick.x, 0, stick.y);
+
+        if (Keyboard.current.wKey.isPressed) move += Vector3.forward;
+
+        if (Keyboard.current.sKey.isPressed) move += Vector3.back;
+        
+        if (Keyboard.current.aKey.isPressed) move += Vector3.left;
+        
+        if (Keyboard.current.dKey.isPressed) move += Vector3.right;
+        
         controller.Move(move.normalized * moveSpeed * Time.deltaTime);
 
         if (move != Vector3.zero)
@@ -124,7 +133,8 @@ public class Player : MonoBehaviour
                 10f * Time.deltaTime);
         }
 
-        if (Keyboard.current.fKey.wasPressedThisFrame)
+        if (Keyboard.current.fKey.wasPressedThisFrame||
+            (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame))
         {
             UseHealItem();
         }
@@ -168,7 +178,10 @@ public class Player : MonoBehaviour
         //    return;
         //}
         //hpBarImage.fillAmount = (float)HP / MaxHP;
+
         HPText.text = $"HP {HP}/{MaxHP}";
+
+        audioSource.volume = 0.4f;
         audioSource.PlayOneShot(hitSE);
         
     }
@@ -197,6 +210,7 @@ public class Player : MonoBehaviour
 
     public void Heel(int heel)
     {
+        audioSource.volume = 0.8f;
         audioSource.PlayOneShot(healSE);
 
         HP += heel;
