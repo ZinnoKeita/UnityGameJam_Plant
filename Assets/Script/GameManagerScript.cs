@@ -42,6 +42,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] private AudioClip gameoverSE;
     [SerializeField] private AudioClip titleBGM;
 
+    string cheatCode = "";
+    public bool aaaaa = false;
+
 
     void Awake()
     {
@@ -59,6 +62,8 @@ public class GameManagerScript : MonoBehaviour
         audioSource.clip = titleBGM;
         audioSource.loop = true;
         audioSource.Play();
+
+        
     }
 
     // Update is called once per frame
@@ -73,6 +78,40 @@ public class GameManagerScript : MonoBehaviour
                 audioSource.Stop();
                 isGameTitle = false;
             }
+
+            if (Keyboard.current.yKey.wasPressedThisFrame)
+            {
+                cheatCode += "Y";
+            }
+
+            if (Keyboard.current.hKey.wasPressedThisFrame)
+            {
+                cheatCode += "H";
+            }
+
+            if (Keyboard.current.jKey.wasPressedThisFrame)
+            {
+                cheatCode += "J";
+            }
+
+            if (cheatCode.Contains("YHJ"))
+            {
+                aaaaa = !aaaaa;
+                cheatCode = "";
+            }
+
+            //if (Keyboard.current.yKey.isPressed
+            //    && Keyboard.current.hKey.isPressed
+            //    && Keyboard.current.jKey.isPressed&&!aaaaa)
+            //{
+            //    aaaaa = true;
+            //}else if(Keyboard.current.yKey.isPressed
+            //    && Keyboard.current.hKey.isPressed
+            //    && Keyboard.current.jKey.isPressed && aaaaa)
+            //{
+            //    aaaaa = false;
+            //}
+
             return;
         }
         TitleCanvas.SetActive(false);

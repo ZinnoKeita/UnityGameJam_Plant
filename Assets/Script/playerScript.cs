@@ -46,6 +46,8 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip hitSE;
     [SerializeField] private AudioClip healSE;
 
+    
+
     public int Score = 0;
 
     bool isInvincible = false;
@@ -65,6 +67,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManagerScript.Instance.aaaaa)
+        {
+            invincibleTime = 0.0f;
+        }
+
         if (GameManagerScript.Instance.isGameOver
             || GameManagerScript.Instance.isGameStart == false)
         {
@@ -168,6 +175,7 @@ public class Player : MonoBehaviour
         //    return;
         //}
         //hpBarImage.fillAmount = (float)HP / MaxHP;
+
         HPText.text = $"HP {HP}/{MaxHP}";
         audioSource.PlayOneShot(hitSE);
         

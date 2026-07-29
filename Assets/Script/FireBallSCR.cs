@@ -79,6 +79,12 @@ public class FireBallSCR : MonoBehaviour
 
     void Update()
     {
+        if (GameManagerScript.Instance.aaaaa)
+        {
+            return;
+        }
+        
+
         if (GameManagerScript.Instance.isGameOver)
         {
             Destroy(gameObject);
@@ -92,6 +98,7 @@ public class FireBallSCR : MonoBehaviour
         // 【本体の処理】複数の決まった位置から１つ選んで出す
         if (!isClone)
         {
+            
             G_time += Time.deltaTime;
             if (G_time >= 15.0f && SpeedUp == 0)
             {

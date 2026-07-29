@@ -17,6 +17,8 @@ public class karehaGachi : MonoBehaviour
     [Header("スポーン間隔（秒単位）")]
     [SerializeField] private float spawnInterval = 15.0f;
 
+    private bool isSettingDone = false;
+
     private float timer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,6 +32,16 @@ public class karehaGachi : MonoBehaviour
         if (!GameManagerScript.Instance.isGameStart)
         {
             return;
+        }
+
+        if (!isSettingDone)
+        {
+            if (GameManagerScript.Instance.aaaaa)
+            {
+                spawnInterval = 0.5f;
+            }
+
+            isSettingDone = true;
         }
 
         if (GameManagerScript.Instance.isGameOver)
