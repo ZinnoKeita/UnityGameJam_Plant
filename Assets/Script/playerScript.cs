@@ -180,6 +180,8 @@ public class Player : MonoBehaviour
         //hpBarImage.fillAmount = (float)HP / MaxHP;
 
         HPText.text = $"HP {HP}/{MaxHP}";
+
+        audioSource.volume = 0.4f;
         audioSource.PlayOneShot(hitSE);
         
     }
@@ -208,6 +210,7 @@ public class Player : MonoBehaviour
 
     public void Heel(int heel)
     {
+        audioSource.volume = 0.8f;
         audioSource.PlayOneShot(healSE);
 
         HP += heel;

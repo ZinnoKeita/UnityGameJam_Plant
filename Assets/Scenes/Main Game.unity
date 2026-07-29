@@ -21572,7 +21572,7 @@ Transform:
   m_GameObject: {fileID: 850632609}
   serializedVersion: 2
   m_LocalRotation: {x: 0.043416563, y: -0.85803854, z: 0.073559836, w: 0.5064324}
-  m_LocalPosition: {x: -349.5, y: 35, z: -398.9}
+  m_LocalPosition: {x: -349.5, y: 39.1, z: -398.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35309,6 +35309,8 @@ MonoBehaviour:
   audioSource: {fileID: 1423941845}
   gameoverSE: {fileID: 8300000, guid: b79a30245eecd5942adca42f0588956c, type: 3}
   titleBGM: {fileID: 8300000, guid: f90f37fe53b549c4da7684b21f0b7de7, type: 3}
+  inGameBGM: {fileID: 8300000, guid: beaeabd9e97545a478fde5d196684468, type: 3}
+  aaaaa: 0
 --- !u!4 &1423941844
 Transform:
   m_ObjectHideFlags: 0
@@ -35338,7 +35340,7 @@ AudioSource:
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.5
-  m_Pitch: 0
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -37162,7 +37164,7 @@ Transform:
   m_GameObject: {fileID: 1503821345}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -372.75, y: 10.68, z: -427.37}
+  m_LocalPosition: {x: -372.75, y: 16.5, z: -427.37}
   m_LocalScale: {x: 15, y: 15, z: 15}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -37252,7 +37254,7 @@ MonoBehaviour:
   PlayerCanvas: {fileID: 840576925}
   audioSource: {fileID: 1503821350}
   hitSE: {fileID: 8300000, guid: 8de41c9501977cd4280263959025ba8c, type: 3}
-  healSE: {fileID: 0}
+  healSE: {fileID: 8300000, guid: 1384d2e539582494da9af2d983d43ffd, type: 3}
   Score: 0
   invincibleTime: 0.5
 --- !u!82 &1503821350
@@ -37268,7 +37270,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -52664,15 +52666,15 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1986496059}
-  - {fileID: 406696106}
+  - {fileID: 850632614}
   - {fileID: 1943842958}
+  - {fileID: 406696106}
+  - {fileID: 840576929}
   - {fileID: 969249509}
   - {fileID: 158096606}
   - {fileID: 1503821346}
   - {fileID: 1423941844}
-  - {fileID: 840576929}
-  - {fileID: 850632614}
   - {fileID: 643145387}
   - {fileID: 255602967}
+  - {fileID: 1986496059}
   - {fileID: 2014108190}

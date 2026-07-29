@@ -41,6 +41,7 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip gameoverSE;
     [SerializeField] private AudioClip titleBGM;
+    [SerializeField] private AudioClip inGameBGM;
 
     string cheatCode = "";
     public bool aaaaa = false;
@@ -60,6 +61,7 @@ public class GameManagerScript : MonoBehaviour
         TitleText.text ="Plant Escape";
 
         audioSource.clip = titleBGM;
+        audioSource.volume = 0.5f;
         audioSource.loop = true;
         audioSource.Play();
 
@@ -77,6 +79,12 @@ public class GameManagerScript : MonoBehaviour
                 (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame))
             {
                 audioSource.Stop();
+
+                audioSource.clip = inGameBGM;
+                audioSource.volume = 0.3f;
+                audioSource.loop = true;
+                
+
                 isGameTitle = false;
             }
 
@@ -136,14 +144,18 @@ public class GameManagerScript : MonoBehaviour
             {
                 CenterText.text = CountDown.ToString();
             }
-            else if (CountDown <= -1)
+            else if (CountDown == -1)
             {
+                
+                isGameStart = true;
                 GameCanvas.SetActive(false);
             }
-            else if (CountDown <= 0)
+            else if (CountDown == 0)
             {
-                isGameStart = true;
+                
                 CenterText.text = "GO!";
+                audioSource.Play();
+
             }
         }
 
@@ -177,6 +189,7 @@ public class GameManagerScript : MonoBehaviour
 
         if (!isGameOver && isGameStart)
         {
+            
 
             GameCanvas.SetActive(false);
             surviveTime += Time.deltaTime;
