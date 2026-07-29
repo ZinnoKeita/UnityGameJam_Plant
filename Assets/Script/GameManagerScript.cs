@@ -105,17 +105,20 @@ public class GameManagerScript : MonoBehaviour
 
 
 
-            if (Keyboard.current.yKey.wasPressedThisFrame)
+            if (Keyboard.current.yKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.rightShoulder.wasPressedThisFrame))
             {
                 cheatCode += "Y";
             }
 
-            if (Keyboard.current.hKey.wasPressedThisFrame)
+            if (Keyboard.current.hKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.xButton.wasPressedThisFrame))
             {
                 cheatCode += "H";
             }
 
-            if (Keyboard.current.jKey.wasPressedThisFrame)
+            if (Keyboard.current.jKey.wasPressedThisFrame||
+                (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame))
             {
                 cheatCode += "J";
             }
@@ -125,6 +128,8 @@ public class GameManagerScript : MonoBehaviour
                 aaaaa = !aaaaa;
                 cheatCode = "";
             }
+
+
 
 
             return;
