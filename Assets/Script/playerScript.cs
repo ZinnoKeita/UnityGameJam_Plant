@@ -161,6 +161,7 @@ public class Player : MonoBehaviour
         //hpBarImage.fillAmount = (float)HP / MaxHP;
         HPText.text = $"HP {HP}/{MaxHP}";
         audioSource.PlayOneShot(hitSE);
+        
     }
 
     public void UseHealItem()
